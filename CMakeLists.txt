@@ -7,4 +7,6 @@ add_executable(TranslatorToYAML main.cpp
         headers/Token.h
         headers/Lexer.h
         headers/Parser.h
-        headers/operations.h)
+        headers/operations.h
+        sources/Lexer.cpp
+)
