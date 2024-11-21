@@ -1,6 +1,8 @@
 #include "../headers/Lexer.h"
 
 Lexer::Lexer(std::ifstream* file) {
+    SymbolTable::GetTable(); // Чтобы наверняка был
+
     std::ostringstream ss;
     ss << file->rdbuf();
     input = ss.str();
@@ -74,7 +76,7 @@ Token Lexer::GetNextToken(TAG expected_tags) {
             std::string matchedToken = match.str();
             currentIndex += matchedToken.size();
             if (!(type & expected_tags)) {
-                return {TAG::ERROR, 0};
+                ERROR("Unexpected token: " + matchedToken);
             }
 
             if (type == TAG::LINE_COMMENT) {
@@ -91,21 +93,17 @@ Token Lexer::GetNextToken(TAG expected_tags) {
                 ++curLine;
                 return GetNextToken(expected_tags);
             }
-
-            if (type == TAG::ID) {
-                return {type, curLine};
-            }
-
-            return {type, curLine};
+            // ----------------------------------------
+            return InitToken(expected_tags, type, matchedToken);
         }
     }
 
-    return {TAG::UNKNOWN, -1};
+    return ERROR("Unexpected token: " + input.substr(currentIndex, 1));
 }
 
-void Lexer::ERROR(const std::string &message) {
-    std::cerr << "ERROR: " << message << std::endl;
-    exit(1);
+Token Lexer::ERROR(const std::string &message) {
+    std::cerr << "Error at line " << curLine << ": " << message << std::endl;
+    return {TAG::ERROR, (size_t)curLine};
 }
 
 void Lexer::SkipLineComment() {
@@ -142,5 +140,23 @@ void Lexer::SkipNewLine() {
         ++currentIndex;
         ++curLine;
     }
+}
+
+Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
+    size_t index = 0;
+
+    try {
+        if (tag == TAG::NUMBER) {
+            index = SymbolTable::GetTable()->AddValue(name, std::stod(name));
+        } else if (tag == TAG::ID && (expected_tags & TAG::NEW_ID) ) {
+            index = SymbolTable::GetTable()->AddValue(name, 0);
+        } else if (tag == TAG::ID) {
+            index = SymbolTable::GetTable()->GetInd(name);
+        }
+    } catch (std::exception& e) {
+        return ERROR(e.what());
+    }
+
+    return {tag, index};
 }
 

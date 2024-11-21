@@ -30,12 +30,13 @@ enum TAG {
     UNKNOWN             = 1 << 21, // Неизвестный токен
     ERROR               = 1 << 22, // Ошибка
     NEW_LINE            = 1 << 23, // Перенос строки
-    ALL                 = (1 << 24) - 1 // Все теги
+    NEW_ID              = 1 << 24, // Новый идентификатор
+    ALL                 = (1 << 25) - 1 // Все теги
 };
 
 struct Token {
     TAG tag = TAG::UNKNOWN;
-    int atr = 0;
+    size_t atr = 0;
 };
 
 

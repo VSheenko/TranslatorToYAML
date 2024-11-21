@@ -2,6 +2,7 @@
 #define TRANSLATORTOYAML_LEXER_H
 
 #include "Token.h"
+#include "SymbolTable.h"
 #include <iostream>
 #include <fstream>
 #include <regex>
@@ -21,11 +22,13 @@ private:
     std::vector<std::pair<std::regex, TAG>> tokenPatterns;
     std::map<TAG, std::string> tagNames;
 
+
+    Token InitToken(TAG expected_tags, TAG tag, const std::string& name);
     void SkipLineComment();
     void SkipBlockComment();
     void SkipSpaces();
     void SkipNewLine();
-    void ERROR(const std::string& message);
+    Token ERROR(const std::string& message);
 public:
     std::string GetTagName(TAG tag);
     Token GetNextToken(TAG expected_tags);
