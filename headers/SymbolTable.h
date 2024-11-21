@@ -24,4 +24,6 @@ public:
     void SetValue(size_t index, double value);
 };
 
+
+
 #endif //TRANSLATORTOYAML_SYMBOLTABLE_H

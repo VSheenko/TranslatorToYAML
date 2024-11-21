@@ -1,4 +1,5 @@
 #include "../headers/SymbolTable.h"
+SymbolTable* SymbolTable::instance = nullptr;
 
 SymbolTable *SymbolTable::GetTable() {
     if (instance == nullptr) {
