@@ -28,11 +28,12 @@ private:
     void SkipBlockComment();
     void SkipSpaces();
     void SkipNewLine();
-    Token ERROR(const std::string& message);
 public:
     std::string GetTagName(TAG tag);
     Token GetNextToken(TAG expected_tags);
+    Token CallError(const std::string& message);
     explicit Lexer(std::ifstream* file);
+    ~Lexer() = default;
 };
 
 #endif //TRANSLATORTOYAML_LEXER_H

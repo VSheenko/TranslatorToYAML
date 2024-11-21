@@ -29,11 +29,13 @@ Lexer::Lexer(std::ifstream* file) {
             {std::regex(R"(^:=)"), TAG::VAR_ASSIGN},
             {std::regex(R"(^=)"), TAG::ASSIGN},
             {std::regex(R"(^\s+)"), TAG::SPACE},
-            {std::regex(R"(^\d+)"), TAG::NUMBER},
-            {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID}
+            {std::regex(R"([-+]?\d+(\.\d+)?)"), TAG::NUMBER},
+            {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID},
+            {std::regex(R"(^\"[^\"]*\")"), TAG::STRING},
     };
 
     tagNames = {
+            {TAG::STRING, "STRING"},
             {TAG::ID, "ID"},
             {TAG::NUMBER, "NUMBER"},
             {TAG::PLUS, "PLUS"},
@@ -56,7 +58,6 @@ Lexer::Lexer(std::ifstream* file) {
             {TAG::ASSIGN, "ASSIGN"},
             {TAG::SPACE, "SPACE"},
             {TAG::UNKNOWN, "UNKNOWN"},
-            {TAG::ERROR, "ERROR"}
     };
 }
 
@@ -76,7 +77,7 @@ Token Lexer::GetNextToken(TAG expected_tags) {
             std::string matchedToken = match.str();
             currentIndex += matchedToken.size();
             if (!(type & expected_tags)) {
-                ERROR("Unexpected token: " + matchedToken);
+                CallError("Unexpected token: " + matchedToken);
             }
 
             if (type == TAG::LINE_COMMENT) {
@@ -98,12 +99,11 @@ Token Lexer::GetNextToken(TAG expected_tags) {
         }
     }
 
-    return ERROR("Unexpected token: " + input.substr(currentIndex, 1));
+    return CallError("Unexpected token: " + input.substr(currentIndex, 1));
 }
 
-Token Lexer::ERROR(const std::string &message) {
-    std::cerr << "Error at line " << curLine << ": " << message << std::endl;
-    return {TAG::ERROR, (size_t)curLine};
+Token Lexer::CallError(const std::string &message) {
+    throw std::runtime_error("Error at line " + std::to_string(curLine) + ": " + message);
 }
 
 void Lexer::SkipLineComment() {
@@ -147,14 +147,16 @@ Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
 
     try {
         if (tag == TAG::NUMBER) {
-            index = SymbolTable::GetTable()->AddValue(name, std::stod(name));
+            index = SymbolTable::GetTable()->AddValue(std::stod(name));
+        } else if (tag == TAG::STRING) {
+            index = SymbolTable::GetTable()->AddValue(name);
         } else if (tag == TAG::ID && (expected_tags & TAG::NEW_ID) ) {
             index = SymbolTable::GetTable()->AddValue(name, 0);
         } else if (tag == TAG::ID) {
             index = SymbolTable::GetTable()->GetInd(name);
         }
     } catch (std::exception& e) {
-        return ERROR(e.what());
+        return CallError(e.what());
     }
 
     return {tag, index};

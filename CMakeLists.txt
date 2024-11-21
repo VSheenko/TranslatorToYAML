@@ -9,4 +9,17 @@ add_executable(TranslatorToYAML main.cpp
         headers/Parser.h
         headers/operations.h
         sources/Lexer.cpp
+        headers/objs/Object.h
+        headers/objs/Value.h
+        headers/objs/Container.h
+        headers/SymbolTable.h
+        sources/SymbolTable.cpp
+        headers/TranslatorToYAML.h
+        sources/Parser.cpp
+        sources/TranslatorToYAML.cpp
+        headers/objs/objs.h
+        headers/objs/Array.h
+        headers/objs/Expr.h
+        headers/objs/Dict.h
+        headers/objs/Str.h
 )

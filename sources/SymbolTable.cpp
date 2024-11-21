@@ -27,17 +27,20 @@ void SymbolTable::SetValue(size_t index, double value) {
     values[index] = value;
 }
 
+
 size_t SymbolTable::AddValue(double value) {
-    values.push_back(value);
+    values.emplace_back(value);
+    is_string.push_back(false);
     return values.size() - 1;
 }
 
-double SymbolTable::GetValue(size_t index) {
+bool SymbolTable::GetValue(size_t index, std::variant<double, std::string>& value) {
     if (index >= values.size()) {
         throw std::runtime_error("Index out of range");
     }
 
-    return values[index];
+    value = values[index];
+    return is_string[index];
 }
 
 size_t SymbolTable::GetInd(const std::string &key) {
@@ -46,5 +49,31 @@ size_t SymbolTable::GetInd(const std::string &key) {
     }
 
     return table[key];
+}
+
+size_t SymbolTable::AddValue(const std::string &key, const std::string &value) {
+    if (table.contains(key)) {
+        throw std::runtime_error("Variable already exists");
+    }
+
+    size_t index = AddValue(value);
+    table[key] = index;
+
+    return 0;
+}
+
+size_t SymbolTable::AddValue(const std::string &value) {
+    values.emplace_back(value);
+    is_string.push_back(true);
+    return values.size() - 1;
+}
+
+void SymbolTable::SetValue(size_t index, const std::string &value) {
+    if (index >= values.size()) {
+        throw std::runtime_error("Index out of range");
+    }
+
+    values[index] = value;
+
 }
 

@@ -21,4 +21,7 @@ void TranslatorToYAML::TranslateToYaml() {
 
     Parser parser(&input);
     parser.Parse(&input);
+
+    Container* root = parser.GetRoot();
+    root->TranslateToYaml(std::cout, "");
 }
