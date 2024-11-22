@@ -6,5 +6,6 @@
 #include "Expr.h"
 #include "Dict.h"
 #include "Str.h"
+#include "Object.h"
 
 #endif //TRANSLATORTOYAML_OBJS_H

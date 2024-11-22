@@ -29,7 +29,7 @@ Lexer::Lexer(std::ifstream* file) {
             {std::regex(R"(^:=)"), TAG::VAR_ASSIGN},
             {std::regex(R"(^=)"), TAG::ASSIGN},
             {std::regex(R"(^\s+)"), TAG::SPACE},
-            {std::regex(R"([-+]?\d+(\.\d+)?)"), TAG::NUMBER},
+            {std::regex(R"(^[-+]?\d+(\.\d+)?)"), TAG::NUMBER},
             {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID},
             {std::regex(R"(^\"[^\"]*\")"), TAG::STRING},
     };
@@ -71,11 +71,19 @@ Token Lexer::GetNextToken(TAG expected_tags) {
 
     std::string remainingInput = input.substr(currentIndex);
 
-    for (const auto& [pattern, type] : tokenPatterns) {
+    if (remainingInput.empty()) {
+        return {TAG::END, 0};
+    }
+
+    for (auto [pattern, type] : tokenPatterns) {
         std::smatch match;
         if (std::regex_search(remainingInput, match, pattern)) {
             std::string matchedToken = match.str();
             currentIndex += matchedToken.size();
+            if ((type & TAG::ID) && !SymbolTable::GetTable()->Contains(matchedToken)) {
+                type = TAG::NEW_ID;
+            }
+
             if (!(type & expected_tags)) {
                 CallError("Unexpected token: " + matchedToken);
             }
@@ -151,7 +159,7 @@ Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
         } else if (tag == TAG::STRING) {
             index = SymbolTable::GetTable()->Add(name, new Str("", name));
         } else if (tag == TAG::NEW_ID) {
-            index = SymbolTable::GetTable()->Add(name, nullptr);
+            index = SymbolTable::GetTable()->Add(name, new Str("", name));
         } else if (tag == TAG::ID) {
             index = SymbolTable::GetTable()->GetInd(name);
         }

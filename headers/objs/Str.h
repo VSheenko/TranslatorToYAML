@@ -5,17 +5,17 @@
 
 class Str : public Object {
 protected:
-    std::string sValue;
+    std::string value;
 
 public:
-    explicit Str(std::string name, std::string s) : Object(std::move(name)), sValue(std::move(s)) {}
+    explicit Str(std::string name, std::string s) : Object(std::move(name)), value(std::move(s)) {}
 
-    std::string GetValue() {
-        return sValue;
+    std::string GetValueStr () override {
+        return value;
     }
 
     void SetValue(const std::string& s) {
-        sValue = s;
+        value = s;
     }
 
     void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
@@ -26,7 +26,7 @@ public:
         else
             out << "- ";
 
-        out << sValue << std::endl;
+        out << value << std::endl;
     }
 
     std::string GetTypeName() override {

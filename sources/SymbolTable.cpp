@@ -17,7 +17,7 @@ size_t SymbolTable::GetInd(const std::string &key) {
 }
 
 
-Object *SymbolTable::GetByInd(size_t index) {
+Object *SymbolTable::GetObjByInd(size_t index) {
     if (index >= values.size()) {
         throw std::runtime_error("Index out of range");
     }
@@ -42,4 +42,29 @@ SymbolTable::~SymbolTable() {
         delete value;
     }
     delete instance;
+}
+
+void SymbolTable::SetObjByInd(size_t index, Object *obj) {
+    if (index >= values.size()) {
+        throw std::runtime_error("Index out of range");
+    }
+
+    values[index] = obj;
+}
+
+SymbolTable::SymbolTable() {
+    values.push_back(new Str("null","null"));
+}
+
+bool SymbolTable::Contains(const std::string &key) {
+    return table.contains(key);
+}
+
+void SymbolTable::DelObjByInd(size_t index) {
+    if (index >= values.size()) {
+        throw std::runtime_error("Index out of range");
+    }
+
+    delete values[index];
+    values[index] = nullptr;
 }
