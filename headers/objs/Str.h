@@ -5,31 +5,32 @@
 
 class Str : public Object {
 protected:
-    size_t index_table;
-    SymbolTable* table = nullptr;
+    std::string sValue;
 
 public:
-    explicit Str(std::string name, size_t ind) : Object(std::move(name)), index_table(ind) {
-        table = SymbolTable::GetTable();
-    }
+    explicit Str(std::string name, std::string s) : Object(std::move(name)), sValue(std::move(s)) {}
 
     std::string GetValue() {
-        std::variant<double, std::string> value;
-        if (!table->GetValue(index_table, value)) {
-            throw std::runtime_error("Value is not a string");
-        }
-
-        return std::get<std::string>(value);
+        return sValue;
     }
 
-    void SetValue(const std::string& value) {
-        table->SetValue(index_table, value);
+    void SetValue(const std::string& s) {
+        sValue = s;
     }
 
     void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
-        std::string value = GetValue();
+        out << prefix;
 
-        out << prefix << "- " << value << std::endl;
+        if (!name.empty())
+            out << name << ": ";
+        else
+            out << "- ";
+
+        out << sValue << std::endl;
+    }
+
+    std::string GetTypeName() override {
+        return "Str";
     }
 };
 

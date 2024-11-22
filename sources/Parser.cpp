@@ -22,6 +22,10 @@ void Parser::Parse(std::ifstream* input) {
 
         if (token.tag == TAG::ARRAY_START) {
             root->Add(CreateArray("array"));
+        } else if (token.tag == TAG::VAR) {
+            root->Add(CreateVar());
+        } else if (token.tag == TAG::DICT_START) {
+            root->Add(CreateDict("dict"));
         }
 
         token = lexer->GetNextToken(static_cast<TAG>(base_level));
@@ -40,12 +44,10 @@ Array *Parser::CreateArray(const std::string& name) {
             lexer->CallError("Expected ')'");
         }
 
-        if (token.tag == TAG::NUMBER) {
-            array->Add(new Value("value", token.atr));
+        if (token.tag == TAG::NUMBER | token.tag == TAG::STRING) {
+            array->Add(SymbolTable::GetTable()->GetByInd(token.atr));
         } else if (token.tag == TAG::EXPR_START) {
             array->Add(CreateExpr());
-        } else if (token.tag == TAG::STRING) {
-            array->Add(new Str("string", token.atr));
         }
 
         token = lexer->GetNextToken(static_cast<TAG>(TAG::COMMA | TAG::RPAREN));
@@ -66,4 +68,12 @@ Expr *Parser::CreateExpr() {
 
 Container *Parser::GetRoot() {
     return root;
+}
+
+Value *Parser::CreateVar() {
+    return nullptr;
+}
+
+Dict *Parser::CreateDict(const std::string &name) {
+    return nullptr;
 }

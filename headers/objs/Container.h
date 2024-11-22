@@ -26,6 +26,10 @@ public:
             delete child;
         }
     }
+
+    std::string GetTypeName() override {
+        return "Container";
+    }
 };
 
 #endif //TRANSLATORTOYAML_CONTAINER_H

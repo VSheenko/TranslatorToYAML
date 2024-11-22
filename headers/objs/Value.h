@@ -4,31 +4,26 @@
 
 class Value : public Object {
 protected:
-    size_t index_table;
-    SymbolTable* table = nullptr;
+    double value;
 
 public:
-    explicit Value(std::string name, size_t ind) : Object(std::move(name)), index_table(ind) {
-        table = SymbolTable::GetTable();
-    }
+    explicit Value(std::string name, double value) : Object(std::move(name)), value(value) {}
 
     double GetValue() {
-        std::variant<double, std::string> value;
-        if (table->GetValue(index_table, value)) {
-            throw std::runtime_error("Value is not a number");
-        }
-
-        return std::get<double>(value);
+        return value;
     }
 
     void SetValue(double value) {
-        table->SetValue(index_table, value);
+        this->value = value;
     }
 
     void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
-        double value = GetValue();
+        out << prefix;
 
-        out << prefix << "- ";
+        if (!name.empty())
+            out << name << ": ";
+        else
+            out << "- ";
 
         if (value == (int)value) {
             out << std::to_string((int)value);
@@ -36,6 +31,10 @@ public:
             out << std::to_string(value);
         }
         out << std::endl;
+    }
+
+    std::string GetTypeName() override {
+        return "Value";
     }
 };
 #endif //TRANSLATORTOYAML_VALUE_H

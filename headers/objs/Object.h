@@ -12,6 +12,7 @@ public:
     Object() = default;
     explicit Object(std::string  name) : name(std::move(name)) {}
 
+    virtual std::string GetTypeName() {return "Object";}
     virtual void TranslateToYaml(std::ostream &out, const std::string& prefix) = 0;
     virtual ~Object() = default;
 };

@@ -17,6 +17,10 @@ public:
             child->TranslateToYaml(out, prefix + "  ");
         }
     }
+
+    std::string GetTypeName() override {
+        return "Array";
+    }
 };
 
 #endif //TRANSLATORTOYAML_ARRAY_H

@@ -147,11 +147,11 @@ Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
 
     try {
         if (tag == TAG::NUMBER) {
-            index = SymbolTable::GetTable()->AddValue(std::stod(name));
+            index = SymbolTable::GetTable()->Add(name, new Value("", std::stod(name)));
         } else if (tag == TAG::STRING) {
-            index = SymbolTable::GetTable()->AddValue(name);
-        } else if (tag == TAG::ID && (expected_tags & TAG::NEW_ID) ) {
-            index = SymbolTable::GetTable()->AddValue(name, 0);
+            index = SymbolTable::GetTable()->Add(name, new Str("", name));
+        } else if (tag == TAG::NEW_ID) {
+            index = SymbolTable::GetTable()->Add(name, nullptr);
         } else if (tag == TAG::ID) {
             index = SymbolTable::GetTable()->GetInd(name);
         }
