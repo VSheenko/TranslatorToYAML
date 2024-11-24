@@ -28,14 +28,7 @@ public:
 
     void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
         out << prefix;
-        out << name << ": ";
-
-        if (value == (int)value) {
-            out << std::to_string((int)value);
-        } else {
-            out << std::to_string(value);
-        }
-
+        out << name << ": " << GetValueStr();
         out << std::endl;
     }
 

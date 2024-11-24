@@ -1,9 +1,9 @@
 #ifndef TRANSLATORTOYAML_OBJECT_H
 #define TRANSLATORTOYAML_OBJECT_H
 
-#include "../SymbolTable.h"
 #include <ostream>
 #include <utility>
+#include <vector>
 
 class Object {
 protected:
@@ -40,6 +40,6 @@ public:
         throw std::runtime_error(GetTypeName() + ": TranslateToYamlLine not implemented");
     };
 
-    virtual ~Object() = default;
+    ~Object() = default;
 };
 #endif //TRANSLATORTOYAML_OBJECT_H

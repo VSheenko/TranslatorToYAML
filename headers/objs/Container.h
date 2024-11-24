@@ -22,7 +22,7 @@ public:
 
     Container() = default;
     explicit Container(const std::string& name) : Object(name) {};
-    ~Container() override {
+    ~Container() {
         for (auto child : children) {
             delete child;
         }

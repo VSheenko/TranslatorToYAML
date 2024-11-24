@@ -22,4 +22,5 @@ add_executable(TranslatorToYAML main.cpp
         headers/objs/Expr.h
         headers/objs/Dict.h
         headers/objs/Str.h
+        sources/Expr.cpp
 )

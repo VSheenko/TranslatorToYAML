@@ -45,7 +45,7 @@ Array *Parser::CreateArray(const std::string& name) {
         if (token.tag == TAG::NUMBER | token.tag == TAG::STRING | token.tag == TAG::ID) {
             array->Add(SymbolTable::GetTable()->GetObjByInd(token.atr));
         } else if (token.tag == TAG::EXPR_START) {
-            array->Add(CreateExpr());
+            array->Add(CreateExpr("expr"));
         } else if (token.tag == TAG::ARRAY_START) {
             array->Add(CreateArray("array"));
         }
@@ -62,8 +62,37 @@ Array *Parser::CreateArray(const std::string& name) {
 
 }
 
-Expr *Parser::CreateExpr() {
-    return nullptr;
+Expr *Parser::CreateExpr(const std::string& name) {
+    Token token = lexer->GetNextToken(static_cast<TAG>(TAG::PLUS | TAG::MINUS | TAG::MUL | TAG::DIV |
+                  TAG::RBRACKET | TAG::NUMBER | TAG::ID | TAG::EXPR_START));
+    std::string expr;
+
+    while (token.tag != TAG::RBRACKET) {
+        if (token.tag == TAG::END) {
+            lexer->CallError("Expected ']'");
+        }
+
+        if (token.tag == TAG::NUMBER) {
+            expr += SymbolTable::GetTable()->GetObjByInd(token.atr)->GetValueStr() + " ";
+        } else if (token.tag == TAG::ID) {
+            if (SymbolTable::GetTable()->GetObjByInd(token.atr)->GetTypeName() != "Value") {
+                lexer->CallError("Expected number");
+            }
+
+            expr += SymbolTable::GetTable()->GetObjByInd(token.atr)->GetValueStr();
+        } else if (token.tag == TAG::EXPR_START) {
+            auto *expr_obj = CreateExpr("array");
+            expr += expr_obj->GetSExpr() + " ";
+            delete expr_obj;
+        } else if (token.tag == TAG::PLUS || token.tag == TAG::MINUS || token.tag == TAG::MUL || token.tag == TAG::DIV) {
+            expr += lexer->GetTagName(token.tag) + " ";
+        }
+
+        token = lexer->GetNextToken(static_cast<TAG>(TAG::PLUS | TAG::MINUS | TAG::MUL | TAG::DIV |
+                TAG::RBRACKET | TAG::NUMBER | TAG::ID | TAG::EXPR_START));
+
+    }
+    return new Expr("expr", expr);
 }
 
 Container *Parser::GetRoot() {
@@ -82,7 +111,7 @@ Object *Parser::CreateVar() {
             TAG::ARRAY_START | TAG::DICT_START));
 
     if (token.tag == TAG::EXPR_START) {
-//        lexer->SetObjByInd(ind, CreateExpr());
+        SymbolTable::GetTable()->SetObjByInd(ind, CreateExpr(var_name));
     } else if (token.tag == TAG::NUMBER || token.tag == TAG::STRING || token.tag == TAG::ID) {
         SymbolTable::GetTable()->GetObjByInd(token.atr)->SetName(var_name);
         SymbolTable::GetTable()->SetObjByInd(ind, SymbolTable::GetTable()->GetObjByInd(token.atr));

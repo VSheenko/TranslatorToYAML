@@ -12,7 +12,7 @@ private:
     Array* CreateArray(const std::string& name);
     Dict* CreateDict(const std::string& name);
     Object* CreateVar();
-    Expr* CreateExpr();
+    Expr* CreateExpr(const std::string& name);
 public:
     explicit Parser(std::ifstream *input);
     ~Parser();

@@ -39,10 +39,10 @@ Lexer::Lexer(std::ifstream* file) {
             {TAG::STRING, "STRING"},
             {TAG::ID, "ID"},
             {TAG::NUMBER, "NUMBER"},
-            {TAG::PLUS, "PLUS"},
-            {TAG::MINUS, "MINUS"},
-            {TAG::MUL, "MUL"},
-            {TAG::DIV, "DIV"},
+            {TAG::PLUS, "+"},
+            {TAG::MINUS, "-"},
+            {TAG::MUL, "*"},
+            {TAG::DIV, "/"},
             {TAG::RPAREN, "RPAREN"},
             {TAG::RBRACE, "RBRACE"},
             {TAG::RBRACKET, "RBRACKET"},
@@ -85,8 +85,12 @@ Token Lexer::GetNextToken(TAG expected_tags) {
                 type = TAG::NEW_ID;
             }
 
-            if ((type & TAG::ID) && (expected_tags & TAG::NEW_ID)) {
+            if (type == TAG::ID && (expected_tags & TAG::NEW_ID)) {
                 CallError("The variable already exists: " + matchedToken);
+            }
+
+            if(type == TAG::NEW_ID && (expected_tags & TAG::ID)) {
+                CallError("The variable does not exist: " + matchedToken);
             }
 
             if (!(type & expected_tags)) {
