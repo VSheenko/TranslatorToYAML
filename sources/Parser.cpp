@@ -13,11 +13,9 @@ Parser::~Parser() {
     delete lexer;
 }
 
-void Parser::Parse(std::ifstream* input) {
+void Parser::Parse() {
     Token token = lexer->GetNextToken(static_cast<TAG>(base_level));
     while (token.tag != TAG::END) {
-        std::cout << lexer->GetTagName(token.tag) << " " << token.atr << std::endl;
-
         if (token.tag == TAG::ARRAY_START) {
             root->Add(CreateArray("array"));
         } else if (token.tag == TAG::VAR) {
@@ -79,7 +77,7 @@ Object *Parser::CreateVar() {
     SymbolTable::GetTable()->DelObjByInd(ind);
 
 
-    token = lexer->GetNextToken(TAG::VAR_ASSIGN);
+    lexer->GetNextToken(TAG::VAR_ASSIGN);
     token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING |
             TAG::ARRAY_START | TAG::DICT_START));
 
@@ -98,5 +96,36 @@ Object *Parser::CreateVar() {
 }
 
 Dict *Parser::CreateDict(const std::string &name) {
-    return nullptr;
+    auto* dict = new Dict(name);
+    Token token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID | TAG::RPAREN));
+    while (token.tag != TAG::RBRACE) {
+        if (token.tag == TAG::END) {
+            lexer->CallError("Expected ')'");
+        }
+
+        size_t ind = token.atr;
+        std::string var_name = SymbolTable::GetTable()->GetObjByInd(ind)->GetValueStr();
+
+        lexer->GetNextToken(TAG::ASSIGN);
+        token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING |
+                TAG::ARRAY_START | TAG::DICT_START));
+
+        if (token.tag == TAG::NUMBER || token.tag == TAG::STRING || token.tag == TAG::ID) {
+            SymbolTable::GetTable()->GetObjByInd(token.atr)->SetName(var_name);
+            dict->Add(SymbolTable::GetTable()->GetObjByInd(token.atr));
+        } else if (token.tag == TAG::EXPR_START) {
+
+        } else if (token.tag == TAG::ARRAY_START) {
+            dict->Add(CreateArray(var_name));
+        } else if (token.tag == TAG::DICT_START) {
+            dict->Add(CreateDict(var_name));
+        }
+
+        token = lexer->GetNextToken(static_cast<TAG>(TAG::COMMA | TAG::RBRACE));
+        if (token.tag == TAG::COMMA) {
+            token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID));
+        }
+    }
+
+    return dict;
 }

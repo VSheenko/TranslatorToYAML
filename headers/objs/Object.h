@@ -26,10 +26,18 @@ public:
         this->name = s;
     }
 
+    virtual std::string GetName() {
+        return name;
+    }
+
     virtual std::string GetTypeName() {return "Object";}
 
     virtual void TranslateToYaml(std::ostream &out, const std::string& prefix) {
         throw std::runtime_error(GetTypeName() + ": TranslateToYaml mot implemented");
+    };
+
+    virtual void TranslateToYamlLine(std::ostream& out) {
+        throw std::runtime_error(GetTypeName() + ": TranslateToYamlLine not implemented");
     };
 
     virtual ~Object() = default;

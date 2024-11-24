@@ -16,7 +16,7 @@ private:
 public:
     explicit Parser(std::ifstream *input);
     ~Parser();
-    void Parse(std::ifstream* input);
+    void Parse();
     Container* GetRoot();
 };
 

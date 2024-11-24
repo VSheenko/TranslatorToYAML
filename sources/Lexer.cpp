@@ -32,6 +32,7 @@ Lexer::Lexer(std::ifstream* file) {
             {std::regex(R"(^[-+]?\d+(\.\d+)?)"), TAG::NUMBER},
             {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID},
             {std::regex(R"(^\"[^\"]*\")"), TAG::STRING},
+            {std::regex(R"(^@\{)"), TAG::DICT_START}
     };
 
     tagNames = {
@@ -84,6 +85,10 @@ Token Lexer::GetNextToken(TAG expected_tags) {
                 type = TAG::NEW_ID;
             }
 
+            if ((type & TAG::ID) && (expected_tags & TAG::NEW_ID)) {
+                CallError("The variable already exists: " + matchedToken);
+            }
+
             if (!(type & expected_tags)) {
                 CallError("Unexpected token: " + matchedToken);
             }
@@ -111,7 +116,7 @@ Token Lexer::GetNextToken(TAG expected_tags) {
 }
 
 Token Lexer::CallError(const std::string &message) {
-    throw std::runtime_error("Error at line " + std::to_string(curLine) + ": " + message);
+    throw std::runtime_error("Error at line " + std::to_string(curLine + 1) + ": " + message);
 }
 
 void Lexer::SkipLineComment() {

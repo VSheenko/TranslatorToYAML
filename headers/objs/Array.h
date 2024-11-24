@@ -23,6 +23,19 @@ public:
         }
     }
 
+    void TranslateToYamlLine(std::ostream& out) override {
+        out << name << ": [";
+        for (int i = 0; i < children.size(); i++) {
+            if (children[i]->GetTypeName() == "Array" || children[i]->GetTypeName() == "Dict") {
+                children[i]->TranslateToYamlLine(out);
+                continue;
+            }
+
+            out << children[i]->GetValueStr() << (i == children.size() - 1 ? "" : ", ");
+        }
+        out << "]" << std::endl;
+    }
+
     std::string GetTypeName() override {
         return "Array";
     }
