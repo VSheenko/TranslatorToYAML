@@ -13,25 +13,32 @@ public:
         return value;
     }
 
+    std::string GetValueStr() override {
+        int int_value = (int)value;
+
+        if (value == int_value) {
+            return std::to_string(int_value);
+        }
+        return std::to_string(value);
+    }
+
     void SetValue(double value) {
         this->value = value;
     }
 
     void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
         out << prefix;
-
-        if (!name.empty())
-            out << name << ": ";
-        else
-            out << "- ";
+        out << name << ": ";
 
         if (value == (int)value) {
             out << std::to_string((int)value);
         } else {
             out << std::to_string(value);
         }
+
         out << std::endl;
     }
+
 
     std::string GetTypeName() override {
         return "Value";

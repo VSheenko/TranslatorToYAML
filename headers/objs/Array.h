@@ -14,7 +14,12 @@ public:
     void TranslateToYaml(std::ostream& out, const std::string& prefix) override {
         out << prefix << name << ":" << std::endl;
         for (auto child : children) {
-            child->TranslateToYaml(out, prefix + "  ");
+            if (child->GetTypeName() == "Array") {
+                child->TranslateToYaml(out, prefix + "  ");
+                continue;
+            }
+
+            out << prefix << "  - " << child->GetValueStr() << std::endl;
         }
     }
 

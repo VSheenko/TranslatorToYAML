@@ -35,7 +35,7 @@ void Parser::Parse(std::ifstream* input) {
 
 
 #define array_level (TAG::NUMBER | TAG::ID | TAG::EXPR_START | \
-                     TAG::RPAREN | TAG::STRING)
+                     TAG::RPAREN | TAG::STRING | TAG::ARRAY_START)
 Array *Parser::CreateArray(const std::string& name) {
     auto* array = new Array(name);
     Token token = lexer->GetNextToken(static_cast<TAG>(array_level));
@@ -48,12 +48,14 @@ Array *Parser::CreateArray(const std::string& name) {
             array->Add(SymbolTable::GetTable()->GetObjByInd(token.atr));
         } else if (token.tag == TAG::EXPR_START) {
             array->Add(CreateExpr());
+        } else if (token.tag == TAG::ARRAY_START) {
+            array->Add(CreateArray("array"));
         }
 
         token = lexer->GetNextToken(static_cast<TAG>(TAG::COMMA | TAG::RPAREN));
 
         if (token.tag == TAG::COMMA) {
-            token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING));
+            token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING | TAG::ARRAY_START));
         }
     }
 
@@ -84,6 +86,7 @@ Object *Parser::CreateVar() {
     if (token.tag == TAG::EXPR_START) {
 //        lexer->SetObjByInd(ind, CreateExpr());
     } else if (token.tag == TAG::NUMBER || token.tag == TAG::STRING || token.tag == TAG::ID) {
+        SymbolTable::GetTable()->GetObjByInd(token.atr)->SetName(var_name);
         SymbolTable::GetTable()->SetObjByInd(ind, SymbolTable::GetTable()->GetObjByInd(token.atr));
     } else if (token.tag == TAG::ARRAY_START) {
         SymbolTable::GetTable()->SetObjByInd(ind, CreateArray(var_name));

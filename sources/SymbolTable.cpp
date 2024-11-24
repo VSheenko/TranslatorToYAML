@@ -27,7 +27,8 @@ Object *SymbolTable::GetObjByInd(size_t index) {
 
 size_t SymbolTable::Add(const std::string &key, Object *obj) {
     if (table.contains(key)) {
-        throw std::runtime_error("Variable already exists");
+        size_t index = table[key];
+        return index;
     }
 
     size_t index = values.size();

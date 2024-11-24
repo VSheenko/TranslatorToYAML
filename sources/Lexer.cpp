@@ -159,6 +159,10 @@ Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
         } else if (tag == TAG::STRING) {
             index = SymbolTable::GetTable()->Add(name, new Str("", name));
         } else if (tag == TAG::NEW_ID) {
+            if (SymbolTable::GetTable()->Contains(name)) {
+                throw std::runtime_error("Variable already exists");
+            }
+
             index = SymbolTable::GetTable()->Add(name, new Str("", name));
         } else if (tag == TAG::ID) {
             index = SymbolTable::GetTable()->GetInd(name);
