@@ -1,0 +1,15 @@
+d: 1
+
+dd:
+  - 1
+  - 3
+  - dict: {d: 1, test2: 2}
+
+dict:
+  d: 1
+  dd: [1, 3, dict: {d: 1, test2: 2}]
+
+b: 30
+
+dict:
+  fgh: 765

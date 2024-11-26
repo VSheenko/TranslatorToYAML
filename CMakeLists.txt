@@ -24,3 +24,5 @@ add_executable(TranslatorToYAML main.cpp
         headers/objs/Str.h
         sources/Expr.cpp
 )
+
+add_subdirectory(tests)
