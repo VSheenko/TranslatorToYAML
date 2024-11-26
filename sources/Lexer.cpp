@@ -10,8 +10,6 @@ Lexer::Lexer(std::ifstream* file) {
     tokenPatterns = {
             {std::regex(R"(^array\()"), TAG::ARRAY_START},
             {std::regex(R"(^var\s)"), TAG::VAR},
-            {std::regex(R"(^\+)"), TAG::PLUS},
-            {std::regex(R"(^\-)"), TAG::MINUS},
             {std::regex(R"(^\*)"), TAG::MUL},
             {std::regex(R"(^\/)"), TAG::DIV},
             {std::regex(R"(^\))"), TAG::RPAREN},
@@ -30,6 +28,8 @@ Lexer::Lexer(std::ifstream* file) {
             {std::regex(R"(^=)"), TAG::ASSIGN},
             {std::regex(R"(^\s+)"), TAG::SPACE},
             {std::regex(R"(^[-+]?\d+(\.\d+)?)"), TAG::NUMBER},
+            {std::regex(R"(^\+)"), TAG::PLUS},
+            {std::regex(R"(^\-)"), TAG::MINUS},
             {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID},
             {std::regex(R"(^\"[^\"]*\")"), TAG::STRING},
             {std::regex(R"(^@\{)"), TAG::DICT_START}

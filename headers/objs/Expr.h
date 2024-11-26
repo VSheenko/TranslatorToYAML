@@ -14,7 +14,7 @@ private:
     static double sub(double a, double b);
     static double mul(double a, double b);
     static double div(double a, double b);
-    static double calcOp(std::stack<std::string>& stack, double (*op)(double, double));
+    double calcOp(std::stack<std::string>& stack, double (*op)(double, double));
 
     std::vector<std::string> Split(std::string s, const std::string& separator);
 

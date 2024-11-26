@@ -17,6 +17,7 @@ public:
             out << prefix << "  ";
             if (child->GetTypeName() == "Array" || child->GetTypeName() == "Dict") {
                 child->TranslateToYamlLine(out);
+                out << std::endl;
                 continue;
             }
 
@@ -27,9 +28,14 @@ public:
     void TranslateToYamlLine(std::ostream& out) override {
         out << name << ": {";
         for (int i = 0; i < children.size(); i++) {
+            if (children[i]->GetTypeName() == "Array" || children[i]->GetTypeName() == "Dict") {
+                children[i]->TranslateToYamlLine(out);
+                continue;
+            }
+
             out << children[i]->GetName() << ": " << children[i]->GetValueStr() << (i == children.size() - 1 ? "" : ", ");
         }
-        out << "}" << std::endl;
+        out << "}";
     }
 
     std::string GetTypeName() override {

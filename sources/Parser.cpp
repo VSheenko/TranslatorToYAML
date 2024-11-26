@@ -22,6 +22,8 @@ void Parser::Parse() {
             root->Add(CreateVar());
         } else if (token.tag == TAG::DICT_START) {
             root->Add(CreateDict("dict"));
+        } else if (token.tag == EXPR_START) {
+            root->Add(CreateExpr("expr"));
         } else if (token.tag == TAG::ID) {
             root->Add(SymbolTable::GetTable()->GetObjByInd(token.atr));
         }
@@ -33,7 +35,7 @@ void Parser::Parse() {
 
 
 #define array_level (TAG::NUMBER | TAG::ID | TAG::EXPR_START | \
-                     TAG::RPAREN | TAG::STRING | TAG::ARRAY_START)
+                     TAG::RPAREN | TAG::STRING | TAG::ARRAY_START | TAG::DICT_START)
 Array *Parser::CreateArray(const std::string& name) {
     auto* array = new Array(name);
     Token token = lexer->GetNextToken(static_cast<TAG>(array_level));
@@ -48,12 +50,14 @@ Array *Parser::CreateArray(const std::string& name) {
             array->Add(CreateExpr("expr"));
         } else if (token.tag == TAG::ARRAY_START) {
             array->Add(CreateArray("array"));
+        } else if (token.tag == TAG::DICT_START) {
+            array->Add(CreateDict("dict"));
         }
 
         token = lexer->GetNextToken(static_cast<TAG>(TAG::COMMA | TAG::RPAREN));
 
         if (token.tag == TAG::COMMA) {
-            token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING | TAG::ARRAY_START));
+            token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START | TAG::NUMBER | TAG::ID | TAG::STRING | TAG::ARRAY_START | TAG::DICT_START));
         }
     }
 
@@ -92,7 +96,7 @@ Expr *Parser::CreateExpr(const std::string& name) {
                 TAG::RBRACKET | TAG::NUMBER | TAG::ID | TAG::EXPR_START));
 
     }
-    return new Expr("expr", expr);
+    return new Expr(name, expr);
 }
 
 Container *Parser::GetRoot() {
@@ -118,7 +122,7 @@ Object *Parser::CreateVar() {
     } else if (token.tag == TAG::ARRAY_START) {
         SymbolTable::GetTable()->SetObjByInd(ind, CreateArray(var_name));
     } else if (token.tag == TAG::DICT_START) {
-        SymbolTable::GetTable()->SetObjByInd(ind, CreateDict("dict"));
+        SymbolTable::GetTable()->SetObjByInd(ind, CreateDict(var_name));
     }
 
     return SymbolTable::GetTable()->GetObjByInd(ind);
@@ -126,10 +130,10 @@ Object *Parser::CreateVar() {
 
 Dict *Parser::CreateDict(const std::string &name) {
     auto* dict = new Dict(name);
-    Token token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID | TAG::RPAREN));
+    Token token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID | TAG::RBRACE));
     while (token.tag != TAG::RBRACE) {
         if (token.tag == TAG::END) {
-            lexer->CallError("Expected ')'");
+            lexer->CallError("Expected '}'");
         }
 
         size_t ind = token.atr;
@@ -143,17 +147,15 @@ Dict *Parser::CreateDict(const std::string &name) {
             SymbolTable::GetTable()->GetObjByInd(token.atr)->SetName(var_name);
             dict->Add(SymbolTable::GetTable()->GetObjByInd(token.atr));
         } else if (token.tag == TAG::EXPR_START) {
-
+            dict->Add(CreateExpr(var_name));
         } else if (token.tag == TAG::ARRAY_START) {
             dict->Add(CreateArray(var_name));
         } else if (token.tag == TAG::DICT_START) {
             dict->Add(CreateDict(var_name));
         }
 
-        token = lexer->GetNextToken(static_cast<TAG>(TAG::COMMA | TAG::RBRACE));
-        if (token.tag == TAG::COMMA) {
-            token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID));
-        }
+        lexer->GetNextToken(static_cast<TAG>(TAG::SEMICOLON));
+        token = lexer->GetNextToken(static_cast<TAG>(TAG::NEW_ID | TAG::RBRACE));
     }
 
     return dict;

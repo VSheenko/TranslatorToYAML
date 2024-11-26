@@ -16,7 +16,9 @@ public:
     void TranslateToYaml(std::ostream& out, const std::string& prefix) override {
         for (auto child : children) {
             child->TranslateToYaml(out, prefix);
-            out << std::endl;
+            if (child != children.back()) {
+                out << std::endl;
+            }
         }
     }
 

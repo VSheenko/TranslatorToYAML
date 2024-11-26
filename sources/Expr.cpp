@@ -23,7 +23,7 @@ double Expr::Calculate() {
     }
 
     if (st.size() != 1) {
-        throw std::runtime_error("Invalid expression");
+        throw std::runtime_error("Invalid expression: " + sExpr);
     }
 
     return std::stod(st.top());
@@ -71,13 +71,14 @@ double Expr::div(double a, double b) {
 
 double Expr::calcOp(std::stack<std::string>& stack, double (*op)(double, double)) {
     if (stack.size() < 2) {
-        throw std::runtime_error("Invalid expression");
+        throw std::runtime_error("Invalid expression: " + sExpr);
     }
 
     double a = std::stod(stack.top());
     stack.pop();
     double b = std::stod(stack.top());
     stack.pop();
+
 
     return op(a, b);
 }
