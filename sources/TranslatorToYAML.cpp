@@ -4,10 +4,7 @@ TranslatorToYAML::TranslatorToYAML(const fs::path &source, const fs::path &desti
     if (!fs::exists(source)) {
         throw std::runtime_error("Source file does not exist");
     }
-
-    if (!fs::exists(destination)) {
-        fs::create_directories(destination);
-    }
+    fs::create_directories(destination.parent_path());
 
     this->source = source;
     this->destination = destination;
