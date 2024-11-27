@@ -146,5 +146,9 @@ var bigdict := @{
 ```
 Вызов программы:
 
+![doc/img/s1.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s1.png)
+
 Результат выполнения:
+
+![doc/img/s2.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s2.png)
 
