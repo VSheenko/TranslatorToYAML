@@ -89,6 +89,14 @@ TranslatorToYaml/
     ├── input.txt
     └── output.yaml
 ```
+# Сборка
+Сборка осущесвтляется как для обычного проекта CMake
+## Требования
+- OS: Windows x64
+- Компилятор: GCC
+- CMake 3.28+
+
+
 # Пример использования
 
 ```bash
@@ -152,3 +160,5 @@ var bigdict := @{
 
 ![doc/img/s2.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s2.png)
 
+# Тесты
+![doc/img/s3.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s3.png)
