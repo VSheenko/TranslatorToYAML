@@ -1,4 +1,6 @@
 #include "../headers/TranslatorToYAML.h"
+#include <fstream>
+
 
 TranslatorToYAML::TranslatorToYAML(const fs::path &source, const fs::path &destination) {
     if (!fs::exists(source)) {

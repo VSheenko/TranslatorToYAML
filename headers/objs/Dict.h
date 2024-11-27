@@ -41,6 +41,23 @@ public:
     std::string GetTypeName() override {
         return "Dict";
     }
+
+    Object* copy() override {
+        auto clone = new Dict(name);
+        for (auto child : children) {
+            clone->Add(child->copy());
+        }
+        return clone;
+    }
+
+    ~Dict() {
+        for (auto child : children) {
+            if (!child)
+                continue;
+            delete child;
+            child = nullptr;
+        }
+    }
 };
 
 #endif //TRANSLATORTOYAML_DICT_H

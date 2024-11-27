@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "../headers/TranslatorToYAML.h"
+#include <fstream>
+
 
 std::string GetString(fs::path path) {
     if (!fs::exists(path)) {
@@ -128,7 +130,7 @@ TEST(TranslatorTest, Var) {
                         "var c := ?[+ 7 3]\n"
                         "var d := array(1, c, b)\n"
                         "var dict := @{first = a; second = 456;}\n";
-    std::string expected = "first: 2\n"
+    std::string expected = "a: 2\n"
                            "\n"
                            "b: \"two\"\n"
                            "\n"
@@ -211,6 +213,65 @@ TEST(TranslatorTest, BlockComment) {
     ASSERT_EQ(expected, GetString(destination));
 }
 
+
+TEST(TranslatorTest, Plus_1) {
+    std::string input = "var s := 3 + 2"
+                        "var str := \"Hello\" + \", \" + \"World\"";
+    std::string expected = "s: 5\n"
+                           "\n"
+                           "str: \"Hello, World\"\n";
+
+    SetString(source, input);
+    TranslatorToYAML translator(source, destination);
+    translator.TranslateToYaml();
+
+    ASSERT_EQ(expected, GetString(destination));
+}
+
+
+TEST(TranslatorTest, Plus_2) {
+    std::string input = "var a := 2"
+                        "array(a + 3, 2, 3)"
+                        "var s := \"och\""
+                        "var ko := \"ko\""
+                        "var sk := s + \"ko\""
+                        "array(\"te\" + \"st\", s + ko)";
+    std::string expected = "a: 2\n"
+                           "\n"
+                           "array:\n"
+                           "  - 5\n"
+                           "  - 2\n"
+                           "  - 3\n"
+                           "\n"
+                           "s: \"och\"\n"
+                           "\n"
+                           "ko: \"ko\"\n"
+                           "\n"
+                           "sk: \"ochko\"\n"
+                           "\n"
+                           "array:\n"
+                           "  - \"test\"\n"
+                           "  - \"ochko\"\n";
+
+    SetString(source, input);
+    TranslatorToYAML translator(source, destination);
+    translator.TranslateToYaml();
+
+    ASSERT_EQ(expected, GetString(destination));
+}
+
+
+TEST(TranslatorTest, Plus_3) {
+    std::string input = "@{s = 2 + 3; b = 2; c = 3;}";
+    std::string expected = "dict:\n  s: 5\n  b: 2\n  c: 3\n";
+
+    SetString(source, input);
+    TranslatorToYAML translator(source, destination);
+    translator.TranslateToYaml();
+
+    ASSERT_EQ(expected, GetString(destination));
+}
+
 TEST(TranslatorTest, CombineTest) {
     std::string input = "var a := 1\n"
                         "\n"
@@ -231,25 +292,67 @@ TEST(TranslatorTest, CombineTest) {
                         "var a := 2\n"
                         "--}}\n"
                         "\n"
-                        "var b := ?[* + 5 ?[/ 125 25] ?[- -6 -9]]"
-                        "@{"
-                        "fgh = 765;}";
+                        "var b := ?[* + 5 ?[/ 125 25] ?[- -6 -9]]\n"
+                        "\n"
+                        "@{fgh = 765;}\n"
+                        "\n"
+                        "var bigarr := array(\n"
+                        "    23 + 7,\n"
+                        "    23 + 17,\n"
+                        "    \"Hello\" + \", \" + \"World!\",\n"
+                        "    ?[+ 5 3] + 2,\n"
+                        "    a + 9,\n"
+                        "    arr,\n"
+                        "    b + 3,\n"
+                        "    sqrt(100),\n"
+                        "    max(12, 321, 54, -12.34, 87, -32),\n"
+                        "    sqrt(12) + 3\n"
+                        ")\n"
+                        "\n"
+                        "var bigdict := @{\n"
+                        "    d1 = 23 + 7;\n"
+                        "    d2 = a + 19;\n"
+                        "    d3 = dict;\n"
+                        "    d4 = \"Hello\" + \", \" + \"World!\";\n"
+                        "    d5 = ?[+ 5 3] + 2;\n"
+                        "    d6 = arr;\n"
+                        "}";
 
-    std::string expected = "d: 1\n"
+    std::string expected = "a: 1\n"
                            "\n"
-                           "dd:\n"
+                           "arr:\n"
                            "  - 1\n"
                            "  - 3\n"
-                           "  - dict: {d: 1, test2: 2}\n"
+                           "  - dict: {test: 1, test2: 2}\n"
                            "\n"
                            "dict:\n"
                            "  d: 1\n"
-                           "  dd: [1, 3, dict: {d: 1, test2: 2}]\n"
+                           "  dd: [1, 3, dict: {test: 1, test2: 2}]\n"
                            "\n"
                            "b: 30\n"
                            "\n"
                            "dict:\n"
-                           "  fgh: 765\n";
+                           "  fgh: 765\n"
+                           "\n"
+                           "bigarr:\n"
+                           "  - 30\n"
+                           "  - 40\n"
+                           "  - \"Hello, World!\"\n"
+                           "  - 10\n"
+                           "  - 10\n"
+                           "  - arr: [1, 3, dict: {test: 1, test2: 2}]\n"
+                           "  - 36\n"
+                           "  - 10\n"
+                           "  - 321\n"
+                           "  - 3.464102\n"
+                           "\n"
+                           "bigdict:\n"
+                           "  d1: 30\n"
+                           "  d2: 20\n"
+                           "  d3: {d: 1, dd: [1, 3, dict: {test: 1, test2: 2}]}\n"
+                           "  d4: \"Hello, World!\"\n"
+                           "  d5: 10\n"
+                           "  d6: [1, 3, dict: {test: 1, test2: 2}]\n";
 
     SetString(source, input);
 

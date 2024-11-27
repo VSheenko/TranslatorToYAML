@@ -40,6 +40,14 @@ public:
         throw std::runtime_error(GetTypeName() + ": TranslateToYamlLine not implemented");
     };
 
+    virtual Object& operator+=(Object& other) {
+        throw std::runtime_error(GetTypeName() + ": operator+ not implemented");
+    }
+
+    virtual Object* copy() {
+        throw std::runtime_error(GetTypeName() + ": copy not implemented");
+    }
+
     ~Object() = default;
 };
 #endif //TRANSLATORTOYAML_OBJECT_H

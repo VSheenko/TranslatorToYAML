@@ -1,5 +1,12 @@
 #include "../headers/Lexer.h"
 
+#include <iostream>
+#include <fstream>
+#include <regex>
+#include <string>
+#include <sstream>
+#include <map>
+
 Lexer::Lexer(std::ifstream* file) {
     SymbolTable::GetTable(); // Чтобы наверняка был
 
@@ -8,6 +15,8 @@ Lexer::Lexer(std::ifstream* file) {
     input = ss.str();
 
     tokenPatterns = {
+            {std::regex(R"(^sqrt\()"), TAG::F_SQRT},
+            {std::regex(R"(^max\()"), TAG::F_MAX},
             {std::regex(R"(^array\()"), TAG::ARRAY_START},
             {std::regex(R"(^var\s)"), TAG::VAR},
             {std::regex(R"(^\*)"), TAG::MUL},
@@ -32,7 +41,7 @@ Lexer::Lexer(std::ifstream* file) {
             {std::regex(R"(^\-)"), TAG::MINUS},
             {std::regex(R"(^[a-z][a-z0-9]*)"), TAG::ID},
             {std::regex(R"(^\"[^\"]*\")"), TAG::STRING},
-            {std::regex(R"(^@\{)"), TAG::DICT_START}
+            {std::regex(R"(^@\{)"), TAG::DICT_START},
     };
 
     tagNames = {
@@ -59,6 +68,8 @@ Lexer::Lexer(std::ifstream* file) {
             {TAG::ASSIGN, "ASSIGN"},
             {TAG::SPACE, "SPACE"},
             {TAG::UNKNOWN, "UNKNOWN"},
+            {TAG::F_MAX, "FUNCTION_MAX"},
+            {TAG::F_SQRT, "FUNCTION_SQRT"},
     };
 }
 
@@ -164,9 +175,9 @@ Token Lexer::InitToken(TAG expected_tags, TAG tag, const std::string &name) {
 
     try {
         if (tag == TAG::NUMBER) {
-            index = SymbolTable::GetTable()->Add(name, new Value("", std::stod(name)));
+            index = SymbolTable::GetTable()->Add(new Value("", std::stod(name)));
         } else if (tag == TAG::STRING) {
-            index = SymbolTable::GetTable()->Add(name, new Str("", name));
+            index = SymbolTable::GetTable()->Add(new Str("", name));
         } else if (tag == TAG::NEW_ID) {
             if (SymbolTable::GetTable()->Contains(name)) {
                 throw std::runtime_error("Variable already exists");

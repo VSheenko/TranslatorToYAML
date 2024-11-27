@@ -2,7 +2,6 @@
 #define TRANSLATORTOYAML_CONTAINER_H
 
 #include "Object.h"
-#include "Value.h"
 
 class Container : public Object {
 protected:
@@ -24,14 +23,18 @@ public:
 
     Container() = default;
     explicit Container(const std::string& name) : Object(name) {};
-    ~Container() {
-        for (auto child : children) {
-            delete child;
-        }
-    }
 
     std::string GetTypeName() override {
         return "Container";
+    }
+
+    ~Container() {
+        for (auto child : children) {
+            if (!child)
+                continue;
+            delete child;
+            child = nullptr;
+        }
     }
 };
 

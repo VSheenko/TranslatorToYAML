@@ -14,7 +14,6 @@ file(GLOB MANAGER
         ../headers/Token.h
         ../headers/Lexer.h
         ../headers/Parser.h
-        ../headers/operations.h
         ../sources/Lexer.cpp
         ../headers/objs/Object.h
         ../headers/objs/Value.h

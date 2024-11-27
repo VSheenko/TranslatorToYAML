@@ -41,6 +41,23 @@ public:
     std::string GetTypeName() override {
         return "Array";
     }
+
+    Object* copy() override {
+        auto* copy = new Array(name);
+        for (auto child : children) {
+            copy->Add(child->copy());
+        }
+        return copy;
+    }
+
+    ~Array() {
+        for (auto child : children) {
+            if (!child)
+                continue;
+            delete child;
+            child = nullptr;
+        }
+    }
 };
 
 #endif //TRANSLATORTOYAML_ARRAY_H

@@ -13,6 +13,9 @@ private:
     Dict* CreateDict(const std::string& name);
     Object* CreateVar();
     Expr* CreateExpr(const std::string& name);
+    void AddToLast(Object* lastObj);
+    Value* Sqrt(const std::string& obj_name);
+    Value* Max(const std::string& obj_name);
 public:
     explicit Parser(std::ifstream *input);
     ~Parser();

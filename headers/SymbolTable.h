@@ -1,12 +1,8 @@
 #ifndef TRANSLATORTOYAML_SYMBOLTABLE_H
 #define TRANSLATORTOYAML_SYMBOLTABLE_H
 
-#include <unordered_map>
-#include <string>
-#include <stdexcept>
-#include <vector>
-#include <variant>
 #include "objs/objs.h"
+#include <unordered_map>
 
 class SymbolTable {
 private:
@@ -21,6 +17,7 @@ public:
     static SymbolTable* GetTable();
     bool Contains(const std::string& key);
     size_t Add(const std::string& key, Object* obj);
+    size_t Add(Object* obj);
     Object* GetObjByInd(size_t index);
     size_t GetInd(const std::string& key);
     void SetObjByInd(size_t index, Object* obj);

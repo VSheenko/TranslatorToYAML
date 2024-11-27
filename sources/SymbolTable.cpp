@@ -1,4 +1,9 @@
 #include "../headers/SymbolTable.h"
+#include <string>
+#include <stdexcept>
+#include <vector>
+#include <variant>
+
 SymbolTable* SymbolTable::instance = nullptr;
 
 SymbolTable *SymbolTable::GetTable() {
@@ -40,7 +45,10 @@ size_t SymbolTable::Add(const std::string &key, Object *obj) {
 
 SymbolTable::~SymbolTable() {
     for (auto value : values) {
+        if (!value)
+            continue;
         delete value;
+        value = nullptr;
     }
     delete instance;
 }
@@ -68,4 +76,11 @@ void SymbolTable::DelObjByInd(size_t index) {
 
     delete values[index];
     values[index] = nullptr;
+}
+
+size_t SymbolTable::Add(Object *obj) {
+    size_t index = values.size();
+    values.push_back(obj);
+
+    return index;
 }

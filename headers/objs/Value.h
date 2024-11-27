@@ -13,6 +13,15 @@ public:
         return value;
     }
 
+    Object& operator+=(Object& other) override {
+        if (other.GetTypeName() != "Value") {
+            throw std::runtime_error("Cannot add " + other.GetTypeName() + " to Value");
+        }
+
+        value += other.GetValueDouble();
+        return *this;
+    }
+
     std::string GetValueStr() override {
         int int_value = (int)value;
 
@@ -35,6 +44,10 @@ public:
 
     std::string GetTypeName() override {
         return "Value";
+    }
+
+    Object* copy() override {
+        return new Value(name, value);
     }
 };
 #endif //TRANSLATORTOYAML_VALUE_H

@@ -3,13 +3,7 @@
 
 #include "Token.h"
 #include "SymbolTable.h"
-#include <iostream>
-#include <fstream>
-#include <regex>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <map>
+
 
 class Lexer {
 private:

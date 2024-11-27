@@ -4,7 +4,6 @@
 #include <vector>
 #include <regex>
 
-
 enum TAG {
     ID                  = 1 << 0,  // Идентификатор
     NUMBER              = 1 << 1,  // Число
@@ -32,7 +31,9 @@ enum TAG {
     NEW_ID              = 1 << 23, // Новый идентификатор
     DICT_START          = 1 << 24, // @{
     STRING              = 1 << 25, // "Строка"
-    ALL                 = (1 << 26) - 1 // Все теги
+    F_SQRT              = 1 << 26, // sqrt
+    F_MAX               = 1 << 27, // max
+    ALL                 = (1 << 28) - 1 // Все теги
 };
 
 struct Token {

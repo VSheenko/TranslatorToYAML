@@ -4,12 +4,12 @@ project(TranslatorToYAML)
 set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_EXE_LINKER_FLAGS "-static")
+add_compile_options(-fno-rtti)
 
 add_executable(TranslatorToYAML main.cpp
         headers/Token.h
         headers/Lexer.h
         headers/Parser.h
-        headers/operations.h
         sources/Lexer.cpp
         headers/objs/Object.h
         headers/objs/Value.h
