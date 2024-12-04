@@ -24,7 +24,10 @@ void Parser::Parse() {
         } else if (token.tag == TAG::DICT_START) {
             root->Add(CreateDict("dict"));
         } else if (token.tag == EXPR_START) {
-            root->Add(CreateExpr("expr"));
+            Object* obj = CreateExpr("expr");
+            if (obj->GetTypeName() == "Array" || obj->GetTypeName() == "Dict") {
+                root->Add(obj);
+            }
         }
 
         token = lexer->GetNextToken(static_cast<TAG>(base_level));
@@ -59,7 +62,7 @@ Array *Parser::CreateArray(const std::string& name) {
 
         if (token.tag == TAG::COMMA) {
             token = lexer->GetNextToken(static_cast<TAG>(TAG::EXPR_START |
-                    TAG::ARRAY_START | TAG::DICT_START));
+                    TAG::ARRAY_START | TAG::DICT_START | TAG::NUMBER | TAG::STRING));
         }
     }
 

@@ -11,7 +11,7 @@ private:
     static bool isValueExpr(const std::string& s);
     static bool isStrExpr(const std::string& s);
 public:
-    static ExprObj* ExprCreate(std::string name, std::string& expr);
+    static ExprObj* ExprCreate(const std::string& name, std::string& expr);
 };
 
 

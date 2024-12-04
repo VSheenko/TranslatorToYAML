@@ -1,7 +1,7 @@
 #include "Expr.h"
 #include <regex>
 
-ExprObj *ExprCreator::ExprCreate(std::string name, std::string &expr) {
+ExprObj *ExprCreator::ExprCreate(const std::string& name, std::string &expr) {
     if (isValueExpr(expr)) {
         return new ExprValue(name, expr);
     } else if (isStrExpr(expr)) {
@@ -17,7 +17,7 @@ bool ExprCreator::isValueExpr(const std::string &s) {
 
     std::vector<std::regex> acceptableSymbols = {
             std::regex(R"(\+|\-|\*|\/|sqrt|max)"),
-            std::regex(R"(^[+-]?\d+$)"),
+            std::regex(R"(^[+-]?\d+(\.\d+)?$)"),
     };
 
     for (const auto& part : parts) {

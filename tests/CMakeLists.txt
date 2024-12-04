@@ -28,7 +28,11 @@ file(GLOB MANAGER
         ../headers/objs/Expr.h
         ../headers/objs/Dict.h
         ../headers/objs/Str.h
-        ../sources/Expr.cpp
+        ../sources/objs/Expr.cpp
+        ../sources/objs/ExprObj.cpp
+        ../headers/objs/ExprValue.h
+        ../sources/objs/ExprValue.cpp
+        ../sources/objs/ExprStr.cpp
 )
 
 add_executable(${PROJECT_NAME}
@@ -36,4 +40,5 @@ add_executable(${PROJECT_NAME}
         ${MANAGER}
 )
 
+target_include_directories(${PROJECT_NAME} PRIVATE ../headers ../headers/objs ../sources ../sources/objs)
 target_link_libraries(${PROJECT_NAME} gtest gtest_main)
