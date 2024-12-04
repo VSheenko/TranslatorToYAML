@@ -89,6 +89,11 @@ TranslatorToYaml/
     ├── input.txt
     └── output.yaml
 ```
+
+## Структура иерархии клаасов для "типов данных"
+
+![s5](https://github.com/user-attachments/assets/fd9358dd-2fc1-4c89-9d7a-d4ffdcd7f0a6)
+
 # Сборка
 Сборка осущесвтляется как для обычного проекта CMake
 ## Требования
@@ -107,50 +112,49 @@ TranslatorToYaml <input> <output>
 ---
 Входной текст:
 ```txt
-var a := 1
+var e1 := ?[+ "1" "2"]
+var e2 := ?[+ "k.djfhg;klfjdhg3w45lisudyr@13123::(U(*@$: SELD" "1244"]
+var e3 := ?[""]
+var e4 := ?[+ "12" "34"]
+var e5 := ?[sqrt 16]
+var e6 := ?[max -1 -2]
 
-var arr := array(
-    1,
-    ?[- 6 3],
-    @{test = 1; test2 = 2; }
+array(
+    ?[e1],
+    ?[e2],
+    ?[e5],
+    ?[e6]
 )
 
-! Это комментарий
 
-var dict := @{
-    d = a;
-    dd = arr;
-}
+var a := 4
+var s := "Hello, "
+var s2 := ?["World!"]
 
-{{!--
-var a := 2
---}}
-
-var b := ?[* + 5 ?[/ 125 25] ?[- -6 -9]]
-
-@{fgh = 765;}
-
-var bigarr := array(
-    23 + 7,
-    23 + 17,
-    "Hello" + ", " + "World!",
-    ?[+ 5 3] + 2,
-    a + 9,
-    arr,
-    b + 3,
-    sqrt(100),
-    max(12, 321, 54, -12.34, 87, -32),
-    sqrt(12) + 3
+array(
+    ?[+ s2 s],
+    ?[56]
 )
 
-var bigdict := @{
-    d1 = 23 + 7;
-    d2 = a + 19;
-    d3 = dict;
-    d4 = "Hello" + ", " + "World!";
-    d5 = ?[+ 5 3] + 2;
-    d6 = arr;
+var testarr := array(
+    ?["Hello"],
+    ?[2345]
+)
+
+@{
+    a2 = 5;
+    s3 = "Hello, ";
+    s4 = ?[+ "World!" " OK"];
+    arr = array(
+        ?[+ s s2],
+        ?[54]
+    );
+    num = ?[* / 16 a + 2 3];
+    str = ?[+ "Och" "ko"];
+    test = ?[testarr];
+    testd = @{ d1 = "d1"; d2 = 12321; d3 = ?[s]; };
 }
+
 ```
 Вызов программы:
 
@@ -158,7 +162,7 @@ var bigdict := @{
 
 Результат выполнения:
 
-![doc/img/s2.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s2.png)
+![s4](https://github.com/user-attachments/assets/78305894-53d6-4d49-a524-f1314be2994b)
 
 # Тесты
 ![doc/img/s3.png](https://github.com/VSheenko/TranslatorToYAML/blob/master/doc/img/s3.png)
