@@ -68,6 +68,9 @@ TranslatorToYaml/
         ├── Container.h
         ├── Dict.h
         ├── Expr.h
+        ├── ExprObj.h
+        ├── ExprStr.h
+        ├── ExprValue.h
         ├── Object.h
         ├── Str.h
         ├── objs.h
@@ -78,7 +81,17 @@ TranslatorToYaml/
     ├── Token.h            # Объявление токенов
     └── TralatorToYaml.h
 ├── sources/
-    ├── Expr.cpp
+    ├── objs
+        ├── Array.cpp
+        ├── Container.cpp
+        ├── Dict.cpp
+        ├── Expr.cpp
+        ├── ExprObj.cpp
+        ├── ExprStr.cpp
+        ├── ExprValue.cpp
+        ├── Object.cpp
+        ├── Str.cpp
+        └── Value.cpp
     ├── Lexer.cpp
     ├── Parser.cpp
     ├── SymbolTable.cpp
