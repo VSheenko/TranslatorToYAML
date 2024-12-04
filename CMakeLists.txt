@@ -24,7 +24,19 @@ add_executable(TranslatorToYAML main.cpp
         headers/objs/Expr.h
         headers/objs/Dict.h
         headers/objs/Str.h
-        sources/Expr.cpp
+        sources/objs/Expr.cpp
+        sources/objs/ExprObj.cpp
+        headers/objs/ExprValue.h
+        sources/objs/ExprValue.cpp
+        sources/objs/ExprStr.cpp
+        sources/objs/Array.cpp
+        sources/objs/Container.cpp
+        sources/objs/Dict.cpp
+        sources/objs/Object.cpp
+        sources/objs/Str.cpp
+        sources/objs/Value.cpp
 )
+
+target_include_directories(TranslatorToYAML PRIVATE headers headers/objs sources sources/objs)
 
 add_subdirectory(tests)

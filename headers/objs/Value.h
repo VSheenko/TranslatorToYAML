@@ -7,47 +7,20 @@ protected:
     double value;
 
 public:
-    explicit Value(std::string name, double value) : Object(std::move(name)), value(value) {}
+    Value(std::string name, double value);
+    explicit Value(double value);
 
-    double GetValueDouble() override {
-        return value;
-    }
+    double GetValueDouble() override;
 
-    Object& operator+=(Object& other) override {
-        if (other.GetTypeName() != "Value") {
-            throw std::runtime_error("Cannot add " + other.GetTypeName() + " to Value");
-        }
+    std::string GetValueStr() override;
 
-        value += other.GetValueDouble();
-        return *this;
-    }
+    void SetValue(double value);
 
-    std::string GetValueStr() override {
-        int int_value = (int)value;
-
-        if (value == int_value) {
-            return std::to_string(int_value);
-        }
-        return std::to_string(value);
-    }
-
-    void SetValue(double value) {
-        this->value = value;
-    }
-
-    void TranslateToYaml(std::ostream &out, const std::string& prefix) override {
-        out << prefix;
-        out << name << ": " << GetValueStr();
-        out << std::endl;
-    }
+    void TranslateToYaml(std::ostream &out, const std::string& prefix) override;
 
 
-    std::string GetTypeName() override {
-        return "Value";
-    }
+    std::string GetTypeName() override;
 
-    Object* copy() override {
-        return new Value(name, value);
-    }
+    Object* copy() override;
 };
 #endif //TRANSLATORTOYAML_VALUE_H

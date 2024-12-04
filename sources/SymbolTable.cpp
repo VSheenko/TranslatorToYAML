@@ -1,4 +1,4 @@
-#include "../headers/SymbolTable.h"
+#include "SymbolTable.h"
 #include <string>
 #include <stdexcept>
 #include <vector>

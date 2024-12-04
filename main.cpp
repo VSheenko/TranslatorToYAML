@@ -1,4 +1,4 @@
-#include "headers/TranslatorToYAML.h"
+#include "TranslatorToYAML.h"
 #include <iostream>
 
 int main(int argc, char* argv[]) {

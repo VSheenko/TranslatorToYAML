@@ -1,7 +1,7 @@
 #ifndef TRANSLATORTOYAML_SYMBOLTABLE_H
 #define TRANSLATORTOYAML_SYMBOLTABLE_H
 
-#include "objs/objs.h"
+#include "objs.h"
 #include <unordered_map>
 
 class SymbolTable {
