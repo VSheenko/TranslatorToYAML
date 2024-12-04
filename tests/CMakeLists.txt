@@ -33,6 +33,12 @@ file(GLOB MANAGER
         ../headers/objs/ExprValue.h
         ../sources/objs/ExprValue.cpp
         ../sources/objs/ExprStr.cpp
+        ../sources/objs/Array.cpp
+        ../sources/objs/Container.cpp
+        ../sources/objs/Dict.cpp
+        ../sources/objs/Object.cpp
+        ../sources/objs/Str.cpp
+        ../sources/objs/Value.cpp
 )
 
 add_executable(${PROJECT_NAME}
