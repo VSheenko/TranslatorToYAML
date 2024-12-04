@@ -33,7 +33,7 @@ public:
     virtual std::string GetTypeName() {return "Object";}
 
     virtual void TranslateToYaml(std::ostream &out, const std::string& prefix) {
-        throw std::runtime_error(GetTypeName() + ": TranslateToYaml mot implemented");
+        throw std::runtime_error(GetTypeName() + ": TranslateToYaml not implemented");
     };
 
     virtual void TranslateToYamlLine(std::ostream& out) {
@@ -46,6 +46,10 @@ public:
 
     virtual Object* copy() {
         throw std::runtime_error(GetTypeName() + ": copy not implemented");
+    }
+
+    virtual std::string GetSExpr() {
+        throw std::runtime_error(GetTypeName() + ": GetSExpr not implemented");
     }
 
     ~Object() = default;

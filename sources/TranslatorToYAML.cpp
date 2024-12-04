@@ -1,4 +1,4 @@
-#include "../headers/TranslatorToYAML.h"
+#include "TranslatorToYAML.h"
 #include <fstream>
 
 

@@ -7,7 +7,8 @@ protected:
     double value;
 
 public:
-    explicit Value(std::string name, double value) : Object(std::move(name)), value(value) {}
+    Value(std::string name, double value) : Object(std::move(name)), value(value) {}
+    explicit Value(double value) : value(value) {};
 
     double GetValueDouble() override {
         return value;

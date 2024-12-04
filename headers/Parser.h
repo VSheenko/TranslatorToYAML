@@ -2,7 +2,7 @@
 #define TRANSLATORTOYAML_PARSER_H
 
 #include "Lexer.h"
-#include "objs/objs.h"
+#include "objs.h"
 
 class Parser {
 private:
@@ -12,10 +12,7 @@ private:
     Array* CreateArray(const std::string& name);
     Dict* CreateDict(const std::string& name);
     Object* CreateVar();
-    Expr* CreateExpr(const std::string& name);
-    void AddToLast(Object* lastObj);
-    Value* Sqrt(const std::string& obj_name);
-    Value* Max(const std::string& obj_name);
+    Object* CreateExpr(const std::string& name);
 public:
     explicit Parser(std::ifstream *input);
     ~Parser();

@@ -1,4 +1,4 @@
-#include "../headers/Lexer.h"
+#include "Lexer.h"
 
 #include <iostream>
 #include <fstream>
@@ -15,8 +15,8 @@ Lexer::Lexer(std::ifstream* file) {
     input = ss.str();
 
     tokenPatterns = {
-            {std::regex(R"(^sqrt\()"), TAG::F_SQRT},
-            {std::regex(R"(^max\()"), TAG::F_MAX},
+            {std::regex(R"(^sqrt)"), TAG::F_SQRT},
+            {std::regex(R"(^max)"), TAG::F_MAX},
             {std::regex(R"(^array\()"), TAG::ARRAY_START},
             {std::regex(R"(^var\s)"), TAG::VAR},
             {std::regex(R"(^\*)"), TAG::MUL},
@@ -48,10 +48,14 @@ Lexer::Lexer(std::ifstream* file) {
             {TAG::STRING, "STRING"},
             {TAG::ID, "ID"},
             {TAG::NUMBER, "NUMBER"},
+
             {TAG::PLUS, "+"},
             {TAG::MINUS, "-"},
             {TAG::MUL, "*"},
             {TAG::DIV, "/"},
+            {TAG::F_MAX, "max"},
+            {TAG::F_SQRT, "sqrt"},
+
             {TAG::RPAREN, "RPAREN"},
             {TAG::RBRACE, "RBRACE"},
             {TAG::RBRACKET, "RBRACKET"},
@@ -68,8 +72,6 @@ Lexer::Lexer(std::ifstream* file) {
             {TAG::ASSIGN, "ASSIGN"},
             {TAG::SPACE, "SPACE"},
             {TAG::UNKNOWN, "UNKNOWN"},
-            {TAG::F_MAX, "FUNCTION_MAX"},
-            {TAG::F_SQRT, "FUNCTION_SQRT"},
     };
 }
 

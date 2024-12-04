@@ -1,28 +1,18 @@
 #ifndef TRANSLATORTOYAML_EXPR_H
 #define TRANSLATORTOYAML_EXPR_H
 
-#include "Value.h"
-#include <stack>
+#include "ExprStr.h"
+#include "ExprValue.h"
 
-class Expr : public Value {
+class ExprCreator {
 private:
-    std::string sExpr;
-    std::vector<std::string> parts;
+    ExprCreator() = default;
 
-    static double add(double a, double b);
-    static double sub(double a, double b);
-    static double mul(double a, double b);
-    static double div(double a, double b);
-    double calcOp(std::stack<std::string>& stack, double (*op)(double, double));
-
-    std::vector<std::string> Split(std::string s, const std::string& separator);
-
+    static bool isValueExpr(const std::string& s);
+    static bool isStrExpr(const std::string& s);
 public:
-    Expr(const std::string& name, std::string  sExpr) : Value(name, 0), sExpr(std::move(sExpr)) {
-        value = Calculate();
-    }
-
-    std::string GetSExpr();
-    double Calculate();
+    static ExprObj* ExprCreate(std::string name, std::string& expr);
 };
+
+
 #endif //TRANSLATORTOYAML_EXPR_H
