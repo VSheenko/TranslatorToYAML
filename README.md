@@ -103,7 +103,7 @@ TranslatorToYaml/
     └── output.yaml
 ```
 
-## Структура иерархии клаасов для "типов данных"
+## Структура иерархии классов для "типов данных"
 
 ![s5](https://github.com/user-attachments/assets/fd9358dd-2fc1-4c89-9d7a-d4ffdcd7f0a6)
 
